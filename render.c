@@ -12,28 +12,49 @@ void render(char *bitmap) {
     int x,y;
     int set;
     int mask;
+    printf("    (\n");
     for (x=0; x < 8; x++) {
+      printf("      (");
         for (y=0; y < 8; y++) {
             set = bitmap[x] & 1 << y;
-            printf("%c", set ? 'X' : ' ');
+            printf("%s", set ? "'1'" : "'0'");
+	    if (y < 8 - 1) {
+	      printf(", ");
+	    }
         }
-        printf("\n");
+	if (x < 8 - 1) {
+	    printf("),\n");
+	} else {
+	    printf(")\n");
+	}
     }
+    printf("    )");
 }
 
 int main(int argc, char **argv) {
+
+    printf("-- Auto generated file.\n"
+	"-- See https://github.com/jonasjj/font8x8-vhdl-package\n\n"
+	"library ieee;"
+        "use ieee.std_logic_1164.all;\n"
+        "package charmap is\n"
+        "  type led8x8_type is array (7 downto 0) of std_logic_vector(7 downto 0);\n"
+        "  type charmap_type is array (127 downto 0) of led8x8_type;\n"
+	"  constant charmap : charmap_type := (\n");
+  
     int ord;
-    if (argc != 2) {
-        usage(argv[0]);
-        return 1;
+    for (ord = 0; ord < 128; ord++) {
+        char *bitmap = font8x8_basic[ord];
+        render(bitmap);
+	if (ord < 128 -1) {
+	     printf(",\n");
+	} else {
+	     printf("\n");
+	}
     }
-    ord = atoi(argv[1]);
-    if (ord > 127 || ord < 0) {
-        usage(argv[0]);
-        return 2;
-    }
-    char *bitmap = font8x8_basic[ord];
     
-    render(bitmap);
+    printf("  );\n");
+    printf("end package;\n");
+
     return 0;
 }
