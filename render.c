@@ -35,11 +35,11 @@ int main(int argc, char **argv) {
 
     printf("-- Auto generated file.\n"
 	"-- See https://github.com/jonasjj/font8x8-vhdl-package\n\n"
-	"library ieee;"
-        "use ieee.std_logic_1164.all;\n"
+	"library ieee;\n"
+        "use ieee.std_logic_1164.all;\n\n"
+	"library dot_matrix;\n"
+	"use dot_matrix.types.all;\n\n"
         "package charmap is\n"
-        "  type led8x8_type is array (7 downto 0) of std_logic_vector(7 downto 0);\n"
-        "  type charmap_type is array (127 downto 0) of led8x8_type;\n"
 	"  constant charmap : charmap_type := (\n");
   
     int ord;
