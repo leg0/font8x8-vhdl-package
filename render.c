@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 #include "font8x8_basic.h"
 
@@ -8,11 +9,17 @@ void usage(char *exec) {
     printf("       <char_code> Decimal character code between 0 and 127\n");
 }
 
-void render(char *bitmap) {
+void render(char *bitmap, int ord) {
     int x,y;
     int set;
     int mask;
-    printf("    (\n");
+
+    printf("    (");
+    if(isprint(ord)) {
+    	printf(" -- '%c'", ord);
+    }
+    printf("\n");
+
     for (x=0; x < 8; x++) {
       printf("      (");
         for (y=0; y < 8; y++) {
@@ -45,7 +52,7 @@ int main(int argc, char **argv) {
     int ord;
     for (ord = 0; ord < 128; ord++) {
         char *bitmap = font8x8_basic[ord];
-        render(bitmap);
+	render(bitmap, ord);
 	if (ord < 128 -1) {
 	     printf(",\n");
 	} else {
