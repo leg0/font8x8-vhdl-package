@@ -1,5 +1,5 @@
 This program generates a VHDL package containing a bitmap of the lower 128 ASCII characters.
-It is intended for use with the https://dotmatrix.vhdlwhiz.com/ VHDL course.
+It is intended for use with the https://vhdlwhiz.com/dotmatrix VHDL course.
 
 Usage:
 gcc -o render render.c && ./render > charmap_pck.vhd
