@@ -4,64 +4,61 @@
 
 #include "font8x8_basic.h"
 
-void usage(char *exec) {
-    printf("Usage: %s <char_code>\n", exec);
-    printf("       <char_code> Decimal character code between 0 and 127\n");
+void render(char const *bitmap, int ord)
+{
+	printf("    (");
+	if (isprint(ord))
+		printf(" -- '%c'\n", ord);
+	else
+		printf(" -- '\\x%02x'\n", (unsigned char)ord);
+
+	for (int x = 0; x < 8; x++)
+	{
+		char out[9] = {0};
+		for (int y = 0; y < 8; y++)
+		{
+			int const set = bitmap[x] & (1 << y);
+			out[y] = set ? '1' : '0';
+		}
+		printf("      b\"%s\"", out);
+
+		if (x < 8-1)
+			puts(",");
+		else
+			puts("");
+	}
+	printf("    )");
 }
 
-void render(char *bitmap, int ord) {
-    int x,y;
-    int set;
-    int mask;
+int main(int argc, char **argv)
+{
 
-    printf("    (");
-    if(isprint(ord)) {
-    	printf(" -- '%c'", ord);
-    }
-    printf("\n");
+	puts(
+		"-- Auto generated file.\n"
+		"-- See https://github.com/jonasjj/font8x8-vhdl-package\n\n"
+		"library ieee;\n"
+		"use ieee.std_logic_1164.all;\n\n"
+		"library dot_matrix;\n"
+		"use dot_matrix.types.all;\n\n"
+		"package charmap is\n"
+		"  constant charmap : charmap_type := (\n");
 
-    for (x=0; x < 8; x++) {
-      printf("      (");
-        for (y=0; y < 8; y++) {
-            set = bitmap[x] & 1 << y;
-            printf("%s", set ? "'1'" : "'0'");
-	    if (y < 8 - 1) {
-	      printf(", ");
-	    }
-        }
-	if (x < 8 - 1) {
-	    printf("),\n");
-	} else {
-	    printf(")\n");
+	for (int ord = 0; ord < 128; ord++)
+	{
+		char const *bitmap = font8x8_basic[ord];
+		render(bitmap, ord);
+		if (ord < 128 - 1)
+		{
+			printf(",\n");
+		}
+		else
+		{
+			printf("\n");
+		}
 	}
-    }
-    printf("    )");
-}
 
-int main(int argc, char **argv) {
+	puts("  );");
+	puts("end package;");
 
-    printf("-- Auto generated file.\n"
-	"-- See https://github.com/jonasjj/font8x8-vhdl-package\n\n"
-	"library ieee;\n"
-        "use ieee.std_logic_1164.all;\n\n"
-	"library dot_matrix;\n"
-	"use dot_matrix.types.all;\n\n"
-        "package charmap is\n"
-	"  constant charmap : charmap_type := (\n");
-  
-    int ord;
-    for (ord = 0; ord < 128; ord++) {
-        char *bitmap = font8x8_basic[ord];
-	render(bitmap, ord);
-	if (ord < 128 -1) {
-	     printf(",\n");
-	} else {
-	     printf("\n");
-	}
-    }
-    
-    printf("  );\n");
-    printf("end package;\n");
-
-    return 0;
+	return 0;
 }
